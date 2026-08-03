@@ -42,12 +42,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Upload APK
-        run: |
-          mkdir -p output
-          cp app/build/outputs/apk/debug/app-debug.apk output/
-          
-      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: output/app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
