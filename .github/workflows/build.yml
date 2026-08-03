@@ -35,8 +35,10 @@ jobs:
           yes | sdkmanager --licenses
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Generate gradlew
+        run: |
+          gradle wrapper --gradle-version 8.0
+          chmod +x gradlew
 
       - name: Build APK
         run: ./gradlew assembleDebug
