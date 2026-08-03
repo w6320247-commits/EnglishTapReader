@@ -34,13 +34,37 @@ jobs:
 
       - name: Build APK
         run: |
-          pwd
+          # 在上级目录创建全新的 Gradle 项目
+          cd /home/runner/work/EnglishTapReader
+          mkdir -p build_project
+          cd build_project
+          
+          # 用 gradle init 创建标准 Android 项目结构
+          gradle init --type basic --dsl groovy --project-name EnglishTapReader
+          
+          # 复制我们写好的代码进去
+          cp -r /home/runner/work/EnglishTapReader/EnglishTapReader/app .
+          cp /home/runner/work/EnglishTapReader/EnglishTapReader/build.gradle .
+          cp /home/runner/work/EnglishTapReader/EnglishTapReader/settings.gradle .
+          cp /home/runner/work/EnglishTapReader/EnglishTapReader/gradle.properties .
+          
+          # 确保 gradlew 可执行
+          chmod +x gradlew || true
+          
+          # 查看文件结构
+          echo "====== 当前目录文件 ======"
           ls -la
-          chmod +x gradlew
+          echo "====== settings.gradle 内容 ======"
+          cat settings.gradle
+          
+          # 开始编译
           ./gradlew assembleDebug
+          
+          # 把生成的 APK 复制回原来的位置
+          cp app/build/outputs/apk/debug/app-debug.apk /home/runner/work/EnglishTapReader/EnglishTapReader/
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app-debug.apk
